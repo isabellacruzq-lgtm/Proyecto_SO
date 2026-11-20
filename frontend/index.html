@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistemas operativos</title>
+  
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 850px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: #35234d;
+    background: #f7f3fc;
+  }
+
+  h1 {
+    color: #6b21a8;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  #estado {
+    padding: 1rem;
+    border-radius: 10px;
+    background: #e9ddf7;
+    color: #542080;
+    border-left: 5px solid #8b5cf6;
+    margin-bottom: 1.5rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(75, 35, 110, 0.12);
+  }
+
+  th, td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #eee5f5;
+  }
+
+  th {
+    background: #6b21a8;
+    color: white;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f0eafa;
+  }
+
+  tbody tr:hover {
+    background: #d9f5df;
+    transition: 0.2s;
+  }
+
+  td {
+    color: #443052;
+  }
+
+  .error {
+    background: #fde8e8 !important;
+    color: #8a1c1c !important;
+    border-left-color: #dc2626 !important;
+  }
+</style>
+
+</head>
+<body>
+  <h1>Sistemas operativos en la historia</h1>
+  <p id="estado">Conectando con la API…</p>
+  <table>
+    <thead><tr><th>Año</th><th>Sistema</th><th>Tipo</th></tr></thead>
+    <tbody id="filas"></tbody>
+  </table>
+
+  <script src="config.js"></script>
+  <script>
+    const estado = document.getElementById("estado");
+    fetch(API_URL + "/api/sistemas")
+      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((sistemas) => {
+        estado.textContent = "Datos traídos de " + API_URL;
+        document.getElementById("filas").innerHTML = sistemas
+          .map((s) => `<tr><td>${s.anio}</td><td>${s.nombre}</td><td>${s.tipo}</td></tr>`)
+          .join("");
+      })
+      .catch((e) => {
+        estado.textContent = "No se pudo conectar con " + API_URL + " (" + e.message + "). Abre la consola del navegador (F12) para ver el detalle.";
+        estado.classList.add("error");
+      });
+  </script>
+</body>
+</html>
